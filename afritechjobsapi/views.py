@@ -1,7 +1,17 @@
-from django.shortcuts import render
-
-# Create your views here.
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Profile, Blog, Event, WorkResources
+from .serializers import BlogSerializer
 
-def index(request):
-    pass
+@api_view(['GET', 'POST'])
+def blog_list(request):
+    if request.method == 'GET':
+        blog = Blog.objects.all()
+        blog_list_serializer = BlogSerializer(blog, many=True)
+        return Response({'blog': blog_list_serializer.data})
+    elif request.method == 'POST':
+        blog_list_serializer = BlogSerializer(data=request.data)
+        if blog_list_serializer.is_valid:
+            blog_list_serializer.save()
+            return Response(blog_list_serializer.data, status=status.HTTP_201_CREATED)
