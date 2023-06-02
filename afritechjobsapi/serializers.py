@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Blog, Event, WorkResources, Category, Profile
+from .models import Blog, Event, WorkResources, HiringGuide, Category, Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +40,17 @@ class WorkResourcesSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkResources
             #put back image and slug field after updating the model and deleting previous content from admin
+        fields = ['id', 'title', 'content', 'category', 'author', 'meta_description', 'date_created', 'date_updated', 'post_status']
+
+class HiringGuideSerializer(serializers.ModelSerializer):
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    # slug = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field='title'
+    #  )
+    category = CategorySerializer(many=True, read_only=True)
+    #put back image and slug field after updating the model and deleting previous content from admin
+    class Meta:
+        model = HiringGuide
         fields = ['id', 'title', 'content', 'category', 'author', 'meta_description', 'date_created', 'date_updated', 'post_status']

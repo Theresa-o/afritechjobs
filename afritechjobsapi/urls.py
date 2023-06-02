@@ -12,6 +12,8 @@ urlpatterns = [
     path("event/<int:id>", views.event_detail, name="event_detail"),
     path("work-resources/", views.work_resources_list, name="work_resources_list"),
     path("work-resources/<int:id>", views.work_resources_detail, name="work_resources_detail"),
+    path("hiring-guide/", views.hiring_guide_list, name="hiring_guide_list"),
+    path("hiring-guide/<int:id>", views.hiring_guide_detail, name="hiring_guide_detail"),
     
     
     

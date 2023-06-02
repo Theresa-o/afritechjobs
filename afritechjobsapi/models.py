@@ -80,6 +80,25 @@ class WorkResources(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author}"
     
+class HiringGuide(models.Model):
+    def deleted_author_replacement_default():
+        #TODO figure out how to change this to a string without returning errors
+        return (1)
+
+    title = models.CharField(max_length=255, unique=True)
+    # image = models.ImageField(upload_to="blog/%Y/%m/%d")
+    content = models.TextField()
+    category = models.ManyToManyField(Category, null=True, blank=True)
+    # slug = models.SlugField(max_length=255, unique=True)
+    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
+    meta_description = models.CharField(max_length=150, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    post_status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.title} by {self.author}"
+    
 
 
 
