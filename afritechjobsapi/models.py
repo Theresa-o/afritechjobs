@@ -31,10 +31,10 @@ class Blog(models.Model):
         return (1)
 
     title = models.CharField(max_length=255, unique=True)
-    image = models.ImageField(upload_to="blog/%Y/%m/%d")
+    # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    # slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
