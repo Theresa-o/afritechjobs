@@ -39,4 +39,5 @@ class WorkResourcesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkResources
-        fields = ['__all__']
+            #put back image and slug field after updating the model and deleting previous content from admin
+        fields = ['id', 'title', 'content', 'category', 'author', 'meta_description', 'date_created', 'date_updated', 'post_status']

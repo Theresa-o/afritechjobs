@@ -10,6 +10,10 @@ urlpatterns = [
     path("blog/<int:id>", views.blog_detail, name="blog_detail"),
     path("event/", views.event_list, name="event_list"),
     path("event/<int:id>", views.event_detail, name="event_detail"),
+    path("work-resources/", views.work_resources_list, name="work_resources_list"),
+    path("work-resources/<int:id>", views.work_resources_detail, name="work_resources_detail"),
+    
+    
     
 ]
 
