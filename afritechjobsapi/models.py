@@ -51,7 +51,7 @@ class Event(models.Model):
     event_name = models.CharField(max_length=200)
     author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     event_details = models.TextField()
-    banner_image = models.ImageField(upload_to="event")
+    # banner_image = models.ImageField(upload_to="event")
     event_host = models.CharField(max_length=200)
     event_date = models.DateTimeField()
     registration_fees = models.IntegerField(default=0)
