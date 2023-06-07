@@ -100,43 +100,76 @@ class HiringGuide(models.Model):
         return f"{self.title} by {self.author}"
     
 class JobSkills(models.Model):
-    #more things to be added
-    #skills options should change based on the selected category
-    #https://stackoverflow.com/questions/3582544/django-model-choice-option-as-a-multi-select-box and https://stackoverflow.com/questions/15393134/django-how-can-i-create-a-multiple-select-form
-    SKILLS_CHOICES = (
-        ('Django', 'Django'),
-        ('React', 'React'),
-    )
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    title = models.CharField(max_length=20, choices=SKILLS_CHOICES)
-    category = models.ManyToManyField(Category, on_delete=models.CASCADE)
+    class SkillsChoices(models.TextChoices):
+        DJANGO = 'DJ', 'Django'
+        REACT = 'RT', 'React'
+    #TODOmore things to be added
+    #TODOskills options should change based on the selected category
+
+    title = models.CharField(max_length=20, choices=SkillsChoices.choices, default=SkillsChoices.DJANGO)
+    category = models.ManyToManyField(Category)
 
     def __str__(self):
         return self.title
 
-class JobLocation(models.Model):
+class JobLocations(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
+    
+class JobType(models.Model):
+    class JobTypeChoices(models.TextChoices):
+        CONTRACT = 'CT', 'Contract'
+        FULLTIME = 'FT', 'FullTime'
+        FREELANCE = 'FL', 'Freelance'
+        INTERNSHIP = 'IP', 'Internship'
+        PARTTIME = 'PT', 'Parttime'
+    
+    job_type_choices = models.CharField(max_length=2, choices=JobTypeChoices.choices, default=JobTypeChoices.FULLTIME)
+
+
+class JobLevel(models.Model):
+    class JobLevelChoices(models.TextChoices):
+        STUDENT = 'ST', 'Student'
+        INTERN = 'IN', 'Intern'
+        ENTRYLEVEL = 'EL', 'Entrylevel'
+        MIDLEVEL = 'ML', 'Midlevel'
+        SENIORLEVEL = 'SL', 'Seniorlevel'
+        COFOUNDER = 'CF', 'Cofounder'
+        DIRECTOR = 'DC', 'Director'
+        MANAGER = 'MG', 'Manager'
+        CEO = 'CEO', 'ChiefExecutiveOfficer'
+        CTO = 'CTO', 'ChiefTechnologyOfficer'
+        CMO = 'CMO', 'ChiefMarketingOfficer'
+        CFO = 'CFO', 'Chief Financial Officer'
+        COO = 'COO', 'Chief Operating Officer'
+    
+    job_level_choices = models.CharField(max_length=3, choices=JobLevelChoices.choices, default=JobLevelChoices.ENTRYLEVEL)
+
 
 class PostAJob(models.Model):
     job_title = models.CharField(max_length=200)
     job_category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    job_skills = models.ManyToManyField
+    job_skills = models.ForeignKey(JobSkills, on_delete=models.SET_NULL, null=True, blank=True)
     job_salary_range = models.IntegerField(blank=True)
-    job_type = models.ForeignKey(JobSkills, on_delete=models.SET_NULL)
     job_description = models.TextField()
-    # job_type = 
-    job_location = models.ForeignKey(JobLocation, on_delete=models.SET_NULL)
-    # job_level
-    # job_application_link
-    # company_name
-    # company_hq
-    # company_logo
-    # companys_website
-    # company_contact_email
-    # company_description
+    job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
+    job_location = models.ForeignKey(JobLocations, on_delete=models.CASCADE, default='')
+    job_level = models.ForeignKey(JobLevel, on_delete=models.CASCADE)
+    job_application_link = models.URLField(max_length=200)
+    company_name = models.CharField(max_length=200)
+    company_hq = models.CharField(max_length=200)
+    company_logo = models.ImageField()
+    companys_website = models.URLField(max_length=200)
+    company_contact_email = models.EmailField(max_length=200, null=True, blank=True)
+    company_description = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.job_title
 
     
 
