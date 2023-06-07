@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Profile, Blog, Event, WorkResources, HiringGuide
-from .serializers import BlogSerializer, EventSerializer, WorkResourcesSerializer, HiringGuideSerializer
+from .forms import CreateJobForm
+from .models import Profile, Blog, Event, WorkResources, HiringGuide, PostAJob
+from .serializers import BlogSerializer, EventSerializer, WorkResourcesSerializer, HiringGuideSerializer, PostAJobSerializer
 
 @api_view(['GET', 'POST'])
 def blog_list(request, format=None):
@@ -137,5 +138,28 @@ def hiring_guide_detail(request, id):
         hiring_guide.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['POST'])
+def post_a_job(request):
+    # if request.method == 'GET':
+    #     post_a_job = PostAJob.objects.all()
+    #     post_a_job_serializer = PostAJobSerializer(post_a_job, many=True)
+    #     return Response(post_a_job_serializer.data)
 
+    #method 1
+    # if request.method == 'POST':
+    #     post_a_job_serializer = PostAJobSerializer(data=request.data)
+    #     if post_a_job_serializer.is_valid():
+    #         post_a_job_serializer.save()
+    #         return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    #method2
+    if request.method == 'POST':
+        form = CreateJobForm(request.data)
+        if form.is_valid():
+            create_job = form.save(commit=False)
+            create_job.created_by = request.user
+            create_job.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
