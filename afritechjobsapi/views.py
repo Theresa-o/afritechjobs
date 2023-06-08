@@ -1,7 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .forms import CreateJobForm
 from .models import Profile, Blog, Event, WorkResources, HiringGuide, PostAJob
 from .serializers import BlogSerializer, EventSerializer, WorkResourcesSerializer, HiringGuideSerializer, PostAJobSerializer
 
@@ -140,26 +139,35 @@ def hiring_guide_detail(request, id):
 
 @api_view(['POST'])
 def post_a_job(request):
-    # if request.method == 'GET':
-    #     post_a_job = PostAJob.objects.all()
-    #     post_a_job_serializer = PostAJobSerializer(post_a_job, many=True)
-    #     return Response(post_a_job_serializer.data)
-
-    #method 1
-    # if request.method == 'POST':
-    #     post_a_job_serializer = PostAJobSerializer(data=request.data)
-    #     if post_a_job_serializer.is_valid():
-    #         post_a_job_serializer.save()
-    #         return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    #method2
     if request.method == 'POST':
-        form = CreateJobForm(request.data)
-        if form.is_valid():
-            create_job = form.save(commit=False)
-            create_job.created_by = request.user
-            create_job.save()
-            return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        post_a_job_serializer = PostAJobSerializer(data=request.data)
+        if post_a_job_serializer.is_valid():
+            post_a_job_serializer.save()
+            return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def view_jobs(request):
+    if request.method == 'GET':
+        post_a_job = PostAJob.objects.all()
+        post_a_job_serializer = PostAJobSerializer(post_a_job, many=True)
+        return Response(post_a_job_serializer.data)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def view_jobs_detail(request, id):
+    try:
+        view_jobs_detail = PostAJob.objects.get(pk=id)
+    except PostAJob.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        view_jobs_detail_serializer = PostAJobSerializer(view_jobs_detail)
+        return Response(view_jobs_detail_serializer.data)
+    elif request.method == 'PUT':
+        view_jobs_detail_serializer = PostAJobSerializer(view_jobs_detail, data=request.data)
+        if view_jobs_detail_serializer.is_valid():
+            view_jobs_detail_serializer.save()
+            return Response(view_jobs_detail_serializer.data)
+        return Response(view_jobs_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        view_jobs_detail.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
