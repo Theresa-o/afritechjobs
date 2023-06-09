@@ -141,7 +141,9 @@ def hiring_guide_detail(request, id):
 def post_a_job(request):
     if request.method == 'POST':
         post_a_job_serializer = PostAJobSerializer(data=request.data)
+        print(request.data)
         if post_a_job_serializer.is_valid():
+            print(request.data)
             post_a_job_serializer.save()
             return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
         return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

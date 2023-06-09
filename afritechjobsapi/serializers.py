@@ -83,7 +83,44 @@ class PostAJobSerializer(serializers.ModelSerializer):
     job_location = JobLocationsSerializer(many=True)
     job_level = JobLevelSerializer(many=True)
     created_by = ProfileSerializer(read_only=True)
+    #companylogotoo
 
     class Meta:
         model = PostAJob
-        fields = ['id', 'job_title', 'job_category', 'job_skills', 'job_salary_range', 'job_description', 'job_type', 'job_location', 'job_level', 'job_application_link',  'company_name', 'company_hq', 'company_logo', 'companys_website', 'company_contact_email', 'company_description', 'date_created', 'date_updated', 'created_by']
+        fields = ['id', 'job_title', 'job_category', 'job_skills', 'job_salary_range', 'job_description', 'job_type', 'job_location', 'job_level', 'job_application_link',  'company_name', 'company_hq', 'companys_website', 'company_contact_email', 'company_description', 'date_created', 'date_updated', 'created_by']
+
+    def create(self, validated_data):
+        job_category_data = validated_data.pop('job_category')
+        job_skills_data = validated_data.pop('job_skills')
+        job_type_data = validated_data.pop('job_type')
+        job_location_data = validated_data.pop('job_location')
+        job_level_data = validated_data.pop('job_level')
+
+        # Create the PostAJob instance
+        post_a_job = PostAJob.objects.create(**validated_data)
+
+        #create the related instances for job_category
+        for category_data in job_category_data:
+            category = Category.objects.create(**category_data)
+            post_a_job.job_category.add(category)
+
+        #create the related instances for job_skills
+        for skills_data in job_skills_data:
+            skills = JobSkills.objects.create(**skills_data)
+            post_a_job.job_skills.add(skills)
+
+        # Create the related instance for job_type
+        job_type = JobType.objects.create(**job_type_data)
+        post_a_job.job_type = job_type
+
+        # Create the related instances for job_location
+        for location_data in job_location_data:
+            location = JobLocations.objects.create(**location_data)
+            post_a_job.job_location.add(location)
+
+        # Create the related instances for job_level
+        for level_data in job_level_data:
+            level = JobLevel.objects.create(**level_data)
+            post_a_job.job_level.add(level)
+
+        return post_a_job
