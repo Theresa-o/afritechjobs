@@ -166,7 +166,7 @@ class PostAJob(models.Model):
     company_description = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    # created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.job_title
