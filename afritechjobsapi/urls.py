@@ -22,7 +22,8 @@ urlpatterns = [
     path("jobs/category/<int:id>", views.job_category_detail, name="job_category_detail"),
     path("jobs/skills", views.job_skills, name="job_skills"),
     path("jobs/skills/<int:id>", views.job_skills_detail, name="job_skills_detail"),
-    # path("jobs/create/joblocations", views.post_a_job_joblocations, name="post_a_job_joblocations"),
+    path("jobs/locations", views.job_locations, name="job_locations"),
+    path("jobs/locations/<int:id>", views.job_locations_detail, name="job_locations_detail"),
     # path("jobs/create/jobtype", views.post_a_job_jobtype, name="post_a_job_jobtype"),
     # path("jobs/create/joblevel", views.post_a_job_joblevel, name="post_a_job_joblevel"),   
     
