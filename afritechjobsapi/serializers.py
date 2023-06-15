@@ -82,43 +82,42 @@ class PostAJobSerializer(serializers.ModelSerializer):
     job_type = JobTypeSerializer(many=True)
     job_location = JobLocationsSerializer(many=True)
     job_level = JobLevelSerializer(many=True)
-    # created_by = ProfileSerializer(read_only=True)
-    #companylogotoo
+    created_by = ProfileSerializer(read_only=True)
 
     class Meta:
         model = PostAJob
-        fields = ['id', 'job_title', 'job_category', 'job_skills', 'job_salary_range', 'job_description', 'job_type', 'job_location', 'job_level', 'job_application_link',  'company_name', 'company_hq', 'companys_website', 'company_contact_email', 'company_description', 'date_created', 'date_updated']
+        fields = ['id', 'job_title', 'job_category', 'job_skills', 'job_salary_range', 'job_description', 'job_type', 'job_location', 'job_level', 'job_application_link',  'company_name', 'company_hq', 'company_logo', 'companys_website', 'company_contact_email', 'company_description', 'date_created', 'date_updated', 'created_by']
 
-    def create(self, validated_data):
-        job_category_data = validated_data.pop('job_category')
-        job_skills_data = validated_data.pop('job_skills')
-        job_type_data = validated_data.pop('job_type')
-        job_location_data = validated_data.pop('job_location')
-        job_level_data = validated_data.pop('job_level')
+    # def create(self, validated_data):
+    #     job_category_data = validated_data.pop('job_category')
+    #     job_skills_data = validated_data.pop('job_skills')
+    #     job_type_data = validated_data.pop('job_type')
+    #     job_location_data = validated_data.pop('job_location')
+    #     job_level_data = validated_data.pop('job_level')
 
-    #trial 1: referenced from drf documentation
-    #returns error = IntegrityError at /jobs/create NOT NULL constraint failed: afritechjobsapi_postajob.job_category_id
-                # Create the PostAJob instance
-        # post_a_job = PostAJob.objects.create(**validated_data)
+    # #trial 1: referenced from drf documentation
+    # #returns error = IntegrityError at /jobs/create NOT NULL constraint failed: afritechjobsapi_postajob.job_category_id
+    # #Create the PostAJob instance
+    #     post_a_job = PostAJob.objects.create(**validated_data)
 
-        # # trial
-        # for level_item in job_level_data:
-        #     JobLevel.objects.create(post_a_job=post_a_job, **level_item)
+    #     # trial
+    #     for level_item in job_level_data:
+    #         JobLevel.objects.create(post_a_job=post_a_job, **level_item)
 
-        #     #new trial
-        # for category_item in job_category_data:
-        #     Category.objects.create(post_a_job=post_a_job, **category_item)
+    #         #new trial
+    #     for category_item in job_category_data:
+    #         Category.objects.create(post_a_job=post_a_job, **category_item)
 
-        # for skills_item in job_skills_data:
-        #     JobSkills.objects.create(post_a_job=post_a_job, **skills_item)
+    #     for skills_item in job_skills_data:
+    #         JobSkills.objects.create(post_a_job=post_a_job, **skills_item)
 
-        # JobType.objects.create(post_a_job=post_a_job, **job_type_data)
+    #     JobType.objects.create(post_a_job=post_a_job, **job_type_data)
 
-        # # Create the related instances for job_location
-        # for location_item in job_location_data:
-        #     JobLocations.objects.create(post_a_job=post_a_job, **location_item)
+    #     # Create the related instances for job_location
+    #     for location_item in job_location_data:
+    #         JobLocations.objects.create(post_a_job=post_a_job, **location_item)
 
-        # return post_a_job
+    #     return post_a_job
 
     #trial 2 from stackoverflow user help
     #error received - TypeError at /jobs/create django.db.models.query.QuerySet.create() argument after ** must be a mapping, not list
@@ -233,34 +232,34 @@ class PostAJobSerializer(serializers.ModelSerializer):
 #trial 5 chatgpt solutionn for trials 1 errors
 #error message TypeError at /jobs/ 'Category' object is not iterable HOWEVER IT CREATES THE POST AND CATEGORY but on jobs, it gives this message
         #Create the related instances for job_category
-        for category_item in job_category_data:
-            category = Category.objects.create(**category_item)
-            validated_data['job_category'] = category
+        # for category_item in job_category_data:
+        #     category = Category.objects.create(**category_item)
+        #     validated_data['job_category'] = category
 
-        # Create the related instances for job_skills
-        for skills_item in job_skills_data:
-            skills = JobSkills.objects.create(**skills_item)
-            validated_data['job_skills'] = skills
+        # # Create the related instances for job_skills
+        # for skills_item in job_skills_data:
+        #     skills = JobSkills.objects.create(**skills_item)
+        #     validated_data['job_skills'] = skills
 
-        # Create the related instances for job_type
-        for type_item in job_type_data:
-            type = JobType.objects.create(**type_item)
-            validated_data['job_type'] = type
+        # # Create the related instances for job_type
+        # for type_item in job_type_data:
+        #     type = JobType.objects.create(**type_item)
+        #     validated_data['job_type'] = type
 
-        # Create the related instances for job_location
-        for location_item in job_location_data:
-            location = JobLocations.objects.create(**location_item)
-            validated_data['job_location'] = location
+        # # Create the related instances for job_location
+        # for location_item in job_location_data:
+        #     location = JobLocations.objects.create(**location_item)
+        #     validated_data['job_location'] = location
 
-        # Create the related instances for job_level
-        for level_item in job_level_data:
-            level = JobLevel.objects.create(**level_item)
-            validated_data['job_level'] = level
+        # # Create the related instances for job_level
+        # for level_item in job_level_data:
+        #     level = JobLevel.objects.create(**level_item)
+        #     validated_data['job_level'] = level
 
-                # Create the PostAJob instance
-        post_a_job = PostAJob.objects.create(**validated_data)
+        #         # Create the PostAJob instance
+        # post_a_job = PostAJob.objects.create(**validated_data)
 
-        return post_a_job
+        # return post_a_job
 
 #trial 6 chatgpt solutionn for trials 5 errors
 # Create the related instances for job_category

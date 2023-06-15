@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Profile, Blog, Event, WorkResources, HiringGuide, PostAJob
-from .serializers import BlogSerializer, EventSerializer, WorkResourcesSerializer, HiringGuideSerializer, PostAJobSerializer
+from .models import Profile, Blog, Event, WorkResources, HiringGuide, PostAJob, Category, JobSkills, JobLocations, JobType, JobLevel
+from .serializers import BlogSerializer, EventSerializer, WorkResourcesSerializer, HiringGuideSerializer, PostAJobSerializer, CategorySerializer, JobSkillsSerializer
 
 @api_view(['GET', 'POST'])
 def blog_list(request, format=None):
@@ -147,7 +147,72 @@ def post_a_job(request):
             post_a_job_serializer.save()
             return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
         return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def job_category(request):
+    if request.method == 'GET':
+        category = Category.objects.all()
+        category_list_serializer = CategorySerializer(category, many=True)
+        return Response(category_list_serializer.data)
+    elif request.method == 'POST':
+        category_serializer = CategorySerializer(data=request.data)
+        if category_serializer.is_valid():
+            category_serializer.save()
+            return Response(category_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(category_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['GET', 'PUT', 'DELETE'])
+def job_category_detail(request, id):
+    try:
+        jobs_category_detail = Category.objects.get(pk=id)
+    except Category.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        jobs_category_detail_serializer = CategorySerializer(jobs_category_detail)
+        return Response(jobs_category_detail_serializer.data)
+    elif request.method == 'PUT':
+        jobs_category_detail_serializer = CategorySerializer(jobs_category_detail, data=request.data)
+        if jobs_category_detail_serializer.is_valid():
+            jobs_category_detail_serializer.save()
+            return Response(jobs_category_detail_serializer.data)
+        return Response(jobs_category_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        jobs_category_detail.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+@api_view(['GET', 'POST'])
+def job_skills(request):
+    if request.method == 'GET':
+        skills = JobSkills.objects.all()
+        skills_list_serializer = JobSkillsSerializer(skills, many=True)
+        return Response(skills_list_serializer.data)
+    elif request.method == 'POST':
+        skills_serializer = JobSkillsSerializer(data=request.data)
+        if skills_serializer.is_valid():
+            skills_serializer.save()
+            return Response(skills_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(skills_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET', 'PUT', 'DELETE'])
+def job_skills_detail(request, id):
+    try:
+        jobs_skills_detail = JobSkills.objects.get(pk=id)
+    except JobSkills.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        jobs_skills_detail_serializer = JobSkillsSerializer(jobs_skills_detail)
+        return Response(jobs_skills_detail_serializer.data)
+    elif request.method == 'PUT':
+        jobs_skills_detail_serializer = JobSkillsSerializer(jobs_skills_detail, data=request.data)
+        if jobs_skills_detail_serializer.is_valid():
+            jobs_skills_detail_serializer.save()
+            return Response(jobs_skills_detail_serializer.data)
+        return Response(jobs_skills_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        jobs_skills_detail.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 @api_view(['GET'])
 def view_jobs(request):
     if request.method == 'GET':
