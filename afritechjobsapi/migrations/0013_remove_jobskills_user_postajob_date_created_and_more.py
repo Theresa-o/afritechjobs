@@ -5,7 +5,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0012_joblocations_postajob_job_location'),
     ]

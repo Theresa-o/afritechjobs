@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0001_initial'),
     ]
@@ -15,6 +14,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='author',
-            field=models.ForeignKey(default=afritechjobsapi.models.Event.deleted_author_replacement_default, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='afritechjobsapi.profile'),
+            field=models.ForeignKey(
+                default=afritechjobsapi.models.Event.deleted_author_replacement_default,
+                null=True,
+                on_delete=django.db.models.deletion.SET_DEFAULT,
+                to='afritechjobsapi.profile',
+            ),
         ),
     ]

@@ -6,7 +6,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0013_remove_jobskills_user_postajob_date_created_and_more'),
     ]
@@ -15,7 +14,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='postajob',
             name='created_by',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.profile'),
+            field=models.ForeignKey(
+                default=1, on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.profile'
+            ),
             preserve_default=False,
         ),
     ]

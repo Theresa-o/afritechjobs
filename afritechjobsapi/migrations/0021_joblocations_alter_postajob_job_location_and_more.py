@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0020_joblocation_alter_postajob_job_location_and_more'),
     ]
@@ -21,7 +20,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='postajob',
             name='job_location',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.joblocations'),
+            field=models.ForeignKey(
+                default='', on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.joblocations'
+            ),
         ),
         migrations.DeleteModel(
             name='JobLocation',

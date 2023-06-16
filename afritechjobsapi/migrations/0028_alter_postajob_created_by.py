@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0027_postajob_created_by'),
     ]

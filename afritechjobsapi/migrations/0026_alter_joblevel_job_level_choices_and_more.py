@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0025_remove_postajob_created_by'),
     ]
@@ -13,7 +12,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='joblevel',
             name='job_level_choices',
-            field=models.CharField(choices=[('ST', 'Student'), ('IN', 'Intern'), ('EL', 'Entrylevel'), ('ML', 'Midlevel'), ('SL', 'Seniorlevel'), ('CF', 'Cofounder'), ('DC', 'Director'), ('MG', 'Manager'), ('CEO', 'Chief Executive Officer'), ('CTO', 'Chief Technology Officer'), ('CMO', 'Chief Marketing Officer'), ('CF', 'Cofounder'), ('CFO', 'Chief Financial Officer'), ('COO', 'Chief Operating Officer')], default='EL', max_length=3),
+            field=models.CharField(
+                choices=[
+                    ('ST', 'Student'),
+                    ('IN', 'Intern'),
+                    ('EL', 'Entrylevel'),
+                    ('ML', 'Midlevel'),
+                    ('SL', 'Seniorlevel'),
+                    ('CF', 'Cofounder'),
+                    ('DC', 'Director'),
+                    ('MG', 'Manager'),
+                    ('CEO', 'Chief Executive Officer'),
+                    ('CTO', 'Chief Technology Officer'),
+                    ('CMO', 'Chief Marketing Officer'),
+                    ('CF', 'Cofounder'),
+                    ('CFO', 'Chief Financial Officer'),
+                    ('COO', 'Chief Operating Officer'),
+                ],
+                default='EL',
+                max_length=3,
+            ),
         ),
         migrations.AlterField(
             model_name='jobskills',

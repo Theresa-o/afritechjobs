@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0009_remove_workresources_image_remove_workresources_slug'),
     ]
@@ -16,7 +15,28 @@ class Migration(migrations.Migration):
             name='JobLevel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('job_level_choices', models.CharField(choices=[('ST', 'Student'), ('IN', 'Intern'), ('EL', 'Entrylevel'), ('ML', 'Midlevel'), ('SL', 'Seniorlevel'), ('CF', 'Cofounder'), ('DC', 'Director'), ('MG', 'Manager'), ('CEO', 'ChiefExecutiveOfficer'), ('CTO', 'ChiefTechnologyOfficer'), ('CMO', 'ChiefMarketingOfficer'), ('CFO', 'Chief Financial Officer'), ('COO', 'Chief Operating Officer')], default='EL', max_length=3)),
+                (
+                    'job_level_choices',
+                    models.CharField(
+                        choices=[
+                            ('ST', 'Student'),
+                            ('IN', 'Intern'),
+                            ('EL', 'Entrylevel'),
+                            ('ML', 'Midlevel'),
+                            ('SL', 'Seniorlevel'),
+                            ('CF', 'Cofounder'),
+                            ('DC', 'Director'),
+                            ('MG', 'Manager'),
+                            ('CEO', 'ChiefExecutiveOfficer'),
+                            ('CTO', 'ChiefTechnologyOfficer'),
+                            ('CMO', 'ChiefMarketingOfficer'),
+                            ('CFO', 'Chief Financial Officer'),
+                            ('COO', 'Chief Operating Officer'),
+                        ],
+                        default='EL',
+                        max_length=3,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -39,7 +59,20 @@ class Migration(migrations.Migration):
             name='JobType',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('job_type_choices', models.CharField(choices=[('CT', 'Contract'), ('FT', 'FullTime'), ('FL', 'Freelance'), ('IP', 'Internship'), ('PT', 'Parttime')], default='FT', max_length=2)),
+                (
+                    'job_type_choices',
+                    models.CharField(
+                        choices=[
+                            ('CT', 'Contract'),
+                            ('FT', 'FullTime'),
+                            ('FL', 'Freelance'),
+                            ('IP', 'Internship'),
+                            ('PT', 'Parttime'),
+                        ],
+                        default='FT',
+                        max_length=2,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -56,11 +89,31 @@ class Migration(migrations.Migration):
                 ('companys_website', models.URLField()),
                 ('company_contact_email', models.EmailField(blank=True, max_length=200, null=True)),
                 ('company_description', models.TextField()),
-                ('job_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.category')),
-                ('job_level', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.joblevel')),
-                ('job_location', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.joblocation')),
-                ('job_skills', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='afritechjobsapi.jobskills')),
-                ('job_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.jobtype')),
+                (
+                    'job_category',
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.category'),
+                ),
+                (
+                    'job_level',
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.joblevel'),
+                ),
+                (
+                    'job_location',
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.joblocation'),
+                ),
+                (
+                    'job_skills',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to='afritechjobsapi.jobskills',
+                    ),
+                ),
+                (
+                    'job_type',
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='afritechjobsapi.jobtype'),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -73,7 +126,15 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('date_updated', models.DateTimeField(auto_now=True)),
                 ('post_status', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(default=afritechjobsapi.models.HiringGuide.deleted_author_replacement_default, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='afritechjobsapi.profile')),
+                (
+                    'author',
+                    models.ForeignKey(
+                        default=afritechjobsapi.models.HiringGuide.deleted_author_replacement_default,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_DEFAULT,
+                        to='afritechjobsapi.profile',
+                    ),
+                ),
                 ('category', models.ManyToManyField(blank=True, null=True, to='afritechjobsapi.category')),
             ],
         ),

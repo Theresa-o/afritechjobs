@@ -7,7 +7,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -42,7 +41,10 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bio', models.TextField(blank=True, max_length=500)),
                 ('is_email_confirmed', models.BooleanField(default=False)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    'user',
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                ),
             ],
         ),
         migrations.CreateModel(
@@ -57,7 +59,15 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('date_updated', models.DateTimeField(auto_now=True)),
                 ('post_status', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(default=afritechjobsapi.models.WorkResources.deleted_author_replacement_default, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='afritechjobsapi.profile')),
+                (
+                    'author',
+                    models.ForeignKey(
+                        default=afritechjobsapi.models.WorkResources.deleted_author_replacement_default,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_DEFAULT,
+                        to='afritechjobsapi.profile',
+                    ),
+                ),
                 ('category', models.ManyToManyField(blank=True, null=True, to='afritechjobsapi.category')),
             ],
         ),
@@ -73,7 +83,15 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('date_updated', models.DateTimeField(auto_now=True)),
                 ('post_status', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(default=afritechjobsapi.models.Blog.deleted_author_replacement_default, null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='afritechjobsapi.profile')),
+                (
+                    'author',
+                    models.ForeignKey(
+                        default=afritechjobsapi.models.Blog.deleted_author_replacement_default,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_DEFAULT,
+                        to='afritechjobsapi.profile',
+                    ),
+                ),
                 ('category', models.ManyToManyField(blank=True, null=True, to='afritechjobsapi.category')),
             ],
         ),

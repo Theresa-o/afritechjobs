@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0006_remove_blog_image'),
     ]

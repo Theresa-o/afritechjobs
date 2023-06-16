@@ -1,8 +1,34 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth import get_user_model
 from rest_framework import status
-from .models import Profile, Blog, Event, WorkResources, HiringGuide, PostAJob, Category, JobSkills, JobLocations, JobType, JobLevel
-from .serializers import BlogSerializer, EventSerializer, WorkResourcesSerializer, HiringGuideSerializer, PostAJobSerializer, CategorySerializer, JobSkillsSerializer, JobLocationsSerializer, JobTypeSerializer, JobLevelSerializer
+from .models import (
+    Profile,
+    Blog,
+    Event,
+    WorkResources,
+    HiringGuide,
+    PostAJob,
+    Category,
+    JobSkills,
+    JobLocations,
+    JobType,
+    JobLevel,
+)
+from .serializers import (
+    BlogSerializer,
+    EventSerializer,
+    WorkResourcesSerializer,
+    HiringGuideSerializer,
+    PostAJobSerializer,
+    JobSerializer,
+    CategorySerializer,
+    JobSkillsSerializer,
+    JobLocationsSerializer,
+    JobTypeSerializer,
+    JobLevelSerializer,
+)
+
 
 @api_view(['GET', 'POST'])
 def blog_list(request, format=None):
@@ -17,13 +43,14 @@ def blog_list(request, format=None):
             return Response(blog_list_serializer.data, status=status.HTTP_201_CREATED)
         return Response(blog_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])   
+
+@api_view(['GET', 'PUT', 'DELETE'])
 def blog_detail(request, id, format=None):
     try:
         blog = Blog.objects.get(pk=id)
     except Blog.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     if request.method == 'GET':
         blog_detail_serializer = BlogSerializer(blog)
         return Response(blog_detail_serializer.data)
@@ -36,7 +63,8 @@ def blog_detail(request, id, format=None):
     elif request.method == 'DELETE':
         blog.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+
 @api_view(['GET', 'POST'])
 def event_list(request):
     if request.method == 'GET':
@@ -49,14 +77,15 @@ def event_list(request):
             event_list_serializer.save()
             return Response(event_list_serializer.data, status=status.HTTP_201_CREATED)
         return Response(event_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def event_detail(request, id, format=None):
     try:
         event = Event.objects.get(pk=id)
     except Event.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     if request.method == 'GET':
         event_detail_serializer = EventSerializer(event)
         return Response(event_detail_serializer.data)
@@ -69,6 +98,7 @@ def event_detail(request, id, format=None):
     elif request.method == 'DELETE':
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET', 'POST'])
 def work_resources_list(request, format=None):
@@ -83,13 +113,14 @@ def work_resources_list(request, format=None):
             return Response(work_resources_list_serializer.data, status=status.HTTP_201_CREATED)
         return Response(work_resources_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def work_resources_detail(request, id):
     try:
         work_resources = WorkResources.objects.get(pk=id)
     except WorkResources.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     if request.method == 'GET':
         work_resources_details_serializer = WorkResourcesSerializer(work_resources)
         return Response(work_resources_details_serializer.data)
@@ -102,7 +133,8 @@ def work_resources_detail(request, id):
     elif request.method == 'DELETE':
         work_resources.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+
 @api_view(['GET', 'POST'])
 def hiring_guide_list(request, format=None):
     if request.method == 'GET':
@@ -115,15 +147,15 @@ def hiring_guide_list(request, format=None):
             hiring_guide_list_serializer.save()
             return Response(hiring_guide_list_serializer.data, status=status.HTTP_201_CREATED)
         return Response(hiring_guide_list_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def hiring_guide_detail(request, id):
     try:
         hiring_guide = HiringGuide.objects.get(pk=id)
     except HiringGuide.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     if request.method == 'GET':
         hiring_guide_details_serializer = HiringGuideSerializer(hiring_guide)
         return Response(hiring_guide_details_serializer.data)
@@ -137,6 +169,7 @@ def hiring_guide_detail(request, id):
         hiring_guide.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['GET', 'POST'])
 def job_category(request):
     if request.method == 'GET':
@@ -149,7 +182,8 @@ def job_category(request):
             category_serializer.save()
             return Response(category_serializer.data, status=status.HTTP_201_CREATED)
         return Response(category_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def job_category_detail(request, id):
     try:
@@ -169,6 +203,7 @@ def job_category_detail(request, id):
         jobs_category_detail.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['GET', 'POST'])
 def job_skills(request):
     if request.method == 'GET':
@@ -181,7 +216,8 @@ def job_skills(request):
             skills_serializer.save()
             return Response(skills_serializer.data, status=status.HTTP_201_CREATED)
         return Response(skills_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def job_skills_detail(request, id):
     try:
@@ -200,7 +236,7 @@ def job_skills_detail(request, id):
     elif request.method == 'DELETE':
         jobs_skills_detail.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
 
 @api_view(['GET', 'POST'])
 def job_locations(request):
@@ -214,7 +250,8 @@ def job_locations(request):
             locations_serializer.save()
             return Response(locations_serializer.data, status=status.HTTP_201_CREATED)
         return Response(locations_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def job_locations_detail(request, id):
     try:
@@ -234,13 +271,15 @@ def job_locations_detail(request, id):
         jobs_locations_detail.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['GET'])
 def job_type(request):
     if request.method == 'GET':
         type = JobType.objects.all()
         type_list_serializer = JobTypeSerializer(type, many=True)
         return Response(type_list_serializer.data)
-    
+
+
 @api_view(['GET'])
 def job_level(request):
     if request.method == 'GET':
@@ -248,16 +287,40 @@ def job_level(request):
         level_list_serializer = JobLevelSerializer(level, many=True)
         return Response(level_list_serializer.data)
 
+
 @api_view(['POST'])
 def post_a_job(request):
     if request.method == 'POST':
         post_a_job_serializer = PostAJobSerializer(data=request.data)
-        print(request.data)
-        if post_a_job_serializer.is_valid():
-            print(request.data)
-            post_a_job_serializer.save()
-            return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # print(request.data)
+        post_a_job_serializer.is_valid(raise_exception=True)
+        validated_data = post_a_job_serializer.validated_data
+        job = PostAJob.objects.create(
+            job_title=validated_data['job_title'],
+            job_salary_range=validated_data['job_salary_range'],
+            job_description=validated_data['job_description'],
+            job_application_link=validated_data['job_application_link'],
+            company_name=validated_data['company_name'],
+            company_hq=validated_data['company_hq'],
+            companys_website=validated_data['companys_website'],
+            company_contact_email=validated_data['company_contact_email'],
+            company_description=validated_data['company_description'],
+            job_category=Category.objects.get(id=validated_data['job_category_id']),
+            job_type=JobType.objects.get(id=validated_data['job_type_id']),
+            created_by=get_user_model().objects.get(id=validated_data['created_by_id']),
+        )
+        for skill in JobSkills.objects.filter(id__in=validated_data['job_skills_id']):
+            job.job_skills.add(skill)
+        for location in JobLocations.objects.filter(id__in=validated_data['job_location_id']):
+            job.job_location.add(location)
+        for level in JobLevel.objects.filter(id__in=validated_data['job_level_id']):
+            job.job_level.add(level)
+
+        # saving instance
+        job.save()
+        job_serializer = JobSerializer(job)
+        return Response(job_serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET'])
 def view_jobs(request):
@@ -265,6 +328,7 @@ def view_jobs(request):
         post_a_job = PostAJob.objects.all()
         post_a_job_serializer = PostAJobSerializer(post_a_job, many=True)
         return Response(post_a_job_serializer.data)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def view_jobs_detail(request, id):

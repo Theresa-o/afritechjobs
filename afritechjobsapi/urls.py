@@ -24,10 +24,7 @@ urlpatterns = [
     path("jobs/locations", views.job_locations, name="job_locations"),
     path("jobs/locations/<int:id>", views.job_locations_detail, name="job_locations_detail"),
     path("jobs/type", views.job_type, name="job_type"),
-    path("jobs/level", views.job_level, name="job_level"),   
-    
-    
-    
+    path("jobs/level", views.job_level, name="job_level"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

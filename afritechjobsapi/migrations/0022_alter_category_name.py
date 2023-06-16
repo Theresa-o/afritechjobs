@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('afritechjobsapi', '0021_joblocations_alter_postajob_job_location_and_more'),
     ]
