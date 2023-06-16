@@ -137,17 +137,6 @@ def hiring_guide_detail(request, id):
         hiring_guide.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['POST'])
-def post_a_job(request):
-    if request.method == 'POST':
-        post_a_job_serializer = PostAJobSerializer(data=request.data)
-        print(request.data)
-        if post_a_job_serializer.is_valid():
-            print(request.data)
-            post_a_job_serializer.save()
-            return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 @api_view(['GET', 'POST'])
 def job_category(request):
     if request.method == 'GET':
@@ -179,7 +168,6 @@ def job_category_detail(request, id):
     elif request.method == 'DELETE':
         jobs_category_detail.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
 
 @api_view(['GET', 'POST'])
 def job_skills(request):
@@ -246,18 +234,30 @@ def job_locations_detail(request, id):
         jobs_locations_detail.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET'])
+def job_type(request):
+    if request.method == 'GET':
+        type = JobType.objects.all()
+        type_list_serializer = JobTypeSerializer(type, many=True)
+        return Response(type_list_serializer.data)
+    
+@api_view(['GET'])
+def job_level(request):
+    if request.method == 'GET':
+        level = JobLevel.objects.all()
+        level_list_serializer = JobLevelSerializer(level, many=True)
+        return Response(level_list_serializer.data)
 
-
-
-
-
-
-
-
-
-
-
-
+@api_view(['POST'])
+def post_a_job(request):
+    if request.method == 'POST':
+        post_a_job_serializer = PostAJobSerializer(data=request.data)
+        print(request.data)
+        if post_a_job_serializer.is_valid():
+            print(request.data)
+            post_a_job_serializer.save()
+            return Response(post_a_job_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(post_a_job_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def view_jobs(request):
