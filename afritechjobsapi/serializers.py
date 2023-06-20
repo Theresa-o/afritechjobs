@@ -167,10 +167,6 @@ class PostAJobSerializer(serializers.Serializer):
     created_by_id = serializers.IntegerField()
     # companylogo
 
-    # def create(self, validated_data):
-
-    #     return job
-
 
 class JobSerializer(serializers.ModelSerializer):
     job_category = CategorySerializer(read_only=True)

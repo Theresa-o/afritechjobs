@@ -5,13 +5,11 @@ from django.dispatch import receiver
 
 # Create your models here.
 
-
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
-
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -21,27 +19,23 @@ class Profile(models.Model):
     def __str__(self):
         return f"profile {self.user.username}"
 
-
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
 
-
 class Blog(models.Model):
     def deleted_author_replacement_default():
-        # TODO figure out how to change this to a string without returning errors
-        return 1
+        #TODO figure out how to change this to a string without returning errors
+        return (1)
 
     title = models.CharField(max_length=255, unique=True)
     # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(
-        Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True
-    )
+    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -50,15 +44,12 @@ class Blog(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author}"
 
-
 class Event(models.Model):
     def deleted_author_replacement_default():
-        return 1
-
+        return (1)
+    
     event_name = models.CharField(max_length=200)
-    author = models.ForeignKey(
-        Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True
-    )
+    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     event_details = models.TextField()
     # banner_image = models.ImageField(upload_to="event")
     event_host = models.CharField(max_length=200)
@@ -70,20 +61,17 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.event_name} by {self.event_host}"
-
-
+    
 class WorkResources(models.Model):
     def deleted_author_replacement_default():
-        return 1
+        return (1)
 
     title = models.CharField(max_length=255, unique=True)
     # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(
-        Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True
-    )
+    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -91,21 +79,18 @@ class WorkResources(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.author}"
-
-
+    
 class HiringGuide(models.Model):
     def deleted_author_replacement_default():
-        # TODO figure out how to change this to a string without returning errors
-        return 1
+        #TODO figure out how to change this to a string without returning errors
+        return (1)
 
     title = models.CharField(max_length=255, unique=True)
     # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(
-        Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True
-    )
+    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -113,10 +98,9 @@ class HiringGuide(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.author}"
-
-
+    
 class JobSkills(models.Model):
-    # TODOskills options should change based on the selected category
+    #TODOskills options should change based on the selected category
 
     title = models.CharField(max_length=20, unique=True)
     category = models.ManyToManyField(Category)
@@ -124,14 +108,12 @@ class JobSkills(models.Model):
     def __str__(self):
         return self.title
 
-
 class JobLocations(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
-
-
+    
 class JobType(models.Model):
     CONTRACT = 'CT'
     FULLTIME = 'FT'
@@ -147,14 +129,11 @@ class JobType(models.Model):
         (PARTTIME, "Parttime"),
     ]
 
-    job_type_choices = models.CharField(
-        max_length=2,
-        choices=JOB_TYPE_CHOICES,
-        default=FULLTIME,
-    )
+    job_type_choices = models.CharField(max_length=2, choices=JOB_TYPE_CHOICES, default=FULLTIME,)
 
 
 class JobLevel(models.Model):
+
     STUDENT = 'ST'
     INTERN = 'IN'
     ENTRYLEVEL = 'EL'
@@ -185,7 +164,7 @@ class JobLevel(models.Model):
         (CFO, "Chief Financial Officer"),
         (COO, "Chief Operating Officer"),
     ]
-
+    
     job_level_choices = models.CharField(max_length=3, choices=JOB_LEVEL_CHOICES, default=ENTRYLEVEL)
 
 
@@ -211,3 +190,13 @@ class PostAJob(models.Model):
 
     def __str__(self):
         return self.job_title
+
+    
+
+
+
+
+
+
+
+
