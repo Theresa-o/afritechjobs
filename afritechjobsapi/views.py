@@ -1,7 +1,20 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from afritechjobsapi.serializers.post_a_job import JobDetailSerializer, JobSerializer
+from afritechjobsapi.serializers.blog import BlogSerializer
+from afritechjobsapi.serializers.event import EventSerializer
+from afritechjobsapi.serializers.workresources import WorkResourcesSerializer
+from afritechjobsapi.serializers.hiringguide import HiringGuideSerializer
+from afritechjobsapi.serializers.category import CategorySerializer
+from afritechjobsapi.serializers.job_skills import JobSkillsSerializer
+from afritechjobsapi.serializers.job_location import JobLocationsSerializer
+from afritechjobsapi.serializers.job_type import JobTypeSerializer
+from afritechjobsapi.serializers.job_level import JobLevelSerializer
+from django.db.models import Q
 from rest_framework import status
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
 from .models import (
     Profile,
     Blog,
@@ -15,19 +28,23 @@ from .models import (
     JobType,
     JobLevel,
 )
-from .serializers import (
-    BlogSerializer,
-    EventSerializer,
-    WorkResourcesSerializer,
-    HiringGuideSerializer,
-    PostAJobSerializer,
-    JobSerializer,
-    CategorySerializer,
-    JobSkillsSerializer,
-    JobLocationsSerializer,
-    JobTypeSerializer,
-    JobLevelSerializer,
-)
+
+# from afritechjobsapi.serializers import (
+#     # BlogSerializer,
+#     # EventSerializer,
+#     # WorkResourcesSerializer,
+#     # HiringGuideSerializer,
+#     # PostAJobSerializer,
+#     # JobSerializer,
+#     # CategorySerializer,
+#     # JobSkillsSerializer,
+#     # JobLocationsSerializer,
+#     # JobTypeSerializer,
+#     # JobLevelSerializer,
+
+#     # JobDetailSerializer, 
+#     # JobSerializer
+# )
 
 
 @api_view(['GET', 'POST'])
@@ -288,63 +305,168 @@ def job_level(request):
         return Response(level_list_serializer.data)
 
 
-@api_view(['POST'])
-def post_a_job(request):
-    if request.method == 'POST':
-        post_a_job_serializer = PostAJobSerializer(data=request.data)
-        # print(request.data)
-        post_a_job_serializer.is_valid(raise_exception=True)
-        validated_data = post_a_job_serializer.validated_data
-        job = PostAJob.objects.create(
-            job_title=validated_data['job_title'],
-            job_salary_range=validated_data['job_salary_range'],
-            job_description=validated_data['job_description'],
-            job_application_link=validated_data['job_application_link'],
-            company_name=validated_data['company_name'],
-            company_hq=validated_data['company_hq'],
-            companys_website=validated_data['companys_website'],
-            company_contact_email=validated_data['company_contact_email'],
-            company_description=validated_data['company_description'],
-            job_category=Category.objects.get(id=validated_data['job_category_id']),
-            job_type=JobType.objects.get(id=validated_data['job_type_id']),
-            created_by=get_user_model().objects.get(id=validated_data['created_by_id']),
-        )
-        for skill in JobSkills.objects.filter(id__in=validated_data['job_skills_id']):
-            job.job_skills.add(skill)
-        for location in JobLocations.objects.filter(id__in=validated_data['job_location_id']):
-            job.job_location.add(location)
-        for level in JobLevel.objects.filter(id__in=validated_data['job_level_id']):
-            job.job_level.add(level)
+# @api_view(['POST'])
+# def post_a_job(request):
+#     if request.method == 'POST':
+#         post_a_job_serializer = PostAJobSerializer(data=request.data)
+#         # print(request.data)
+#         post_a_job_serializer.is_valid(raise_exception=True)
+#         validated_data = post_a_job_serializer.validated_data
+#         job = PostAJob.objects.create(
+#             job_title=validated_data['job_title'],
+#             job_salary_range=validated_data['job_salary_range'],
+#             job_description=validated_data['job_description'],
+#             job_application_link=validated_data['job_application_link'],
+#             company_name=validated_data['company_name'],
+#             company_hq=validated_data['company_hq'],
+#             companys_website=validated_data['companys_website'],
+#             company_contact_email=validated_data['company_contact_email'],
+#             company_description=validated_data['company_description'],
+#             job_category=Category.objects.get(id=validated_data['job_category_id']),
+#             job_type=JobType.objects.get(id=validated_data['job_type_id']),
+#             created_by=get_user_model().objects.get(id=validated_data['created_by_id']),
+#         )
+#         for skill in JobSkills.objects.filter(id__in=validated_data['job_skills_id']):
+#             job.job_skills.add(skill)
+#         for location in JobLocations.objects.filter(id__in=validated_data['job_location_id']):
+#             job.job_location.add(location)
+#         for level in JobLevel.objects.filter(id__in=validated_data['job_level_id']):
+#             job.job_level.add(level)
 
-        # saving instance
-        job.save()
-        job_serializer = JobSerializer(job)
-        return Response(job_serializer.data, status=status.HTTP_201_CREATED)
-
-
-@api_view(['GET'])
-def view_jobs(request):
-    if request.method == 'GET':
-        post_a_job = PostAJob.objects.all()
-        post_a_job_serializer = PostAJobSerializer(post_a_job, many=True)
-        return Response(post_a_job_serializer.data)
+#         # saving instance
+#         job.save()
+#         job_serializer = JobSerializer(job)
+#         return Response(job_serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def view_jobs_detail(request, id):
-    try:
-        view_jobs_detail = PostAJob.objects.get(pk=id)
-    except PostAJob.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
-        view_jobs_detail_serializer = PostAJobSerializer(view_jobs_detail)
-        return Response(view_jobs_detail_serializer.data)
-    elif request.method == 'PUT':
-        view_jobs_detail_serializer = PostAJobSerializer(view_jobs_detail, data=request.data)
-        if view_jobs_detail_serializer.is_valid():
-            view_jobs_detail_serializer.save()
-            return Response(view_jobs_detail_serializer.data)
-        return Response(view_jobs_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        view_jobs_detail.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# @api_view(['GET'])
+# def view_jobs(request):
+#     if request.method == 'GET':
+#         post_a_job = PostAJob.objects.all()
+#         post_a_job_serializer = PostAJobSerializer(post_a_job, many=True)
+#         return Response(post_a_job_serializer.data)
+
+
+# @api_view(['GET', 'PUT', 'DELETE'])
+# def view_jobs_detail(request, id):
+#     try:
+#         view_jobs_detail = PostAJob.objects.get(pk=id)
+#     except PostAJob.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#     if request.method == 'GET':
+#         view_jobs_detail_serializer = PostAJobSerializer(view_jobs_detail)
+#         return Response(view_jobs_detail_serializer.data)
+#     elif request.method == 'PUT':
+#         view_jobs_detail_serializer = PostAJobSerializer(view_jobs_detail, data=request.data)
+#         if view_jobs_detail_serializer.is_valid():
+#             view_jobs_detail_serializer.save()
+#             return Response(view_jobs_detail_serializer.data)
+#         return Response(view_jobs_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     elif request.method == 'DELETE':
+#         view_jobs_detail.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PostAJobListView(GenericAPIView):
+    serializer_class = JobDetailSerializer
+    queryset = (
+        PostAJob.objects.select_related('job_category', 'job_type', 'created_by')
+        .prefetch_related('job_skills', 'job_location', 'job_level')
+        .all()
+    )
+
+    def get(self, request, *args, **kwargs):
+        # Get the queryset
+        queryset = self.get_queryset()
+
+        # Instantiate the serializer
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Return the serialized data
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned jobs to query parameter in the URL.
+        """
+        
+        filter_query = Q()
+        company_name = self.request.query_params.get('company')
+        if company_name is not None:
+            filter_query &= Q(company_name__contains=company_name)
+
+        user_id = self.request.query_params.get('user_id')
+        if user_id is not None:
+            filter_query &= Q(created_by=user_id)
+
+        salary = self.request.query_params.get('salary')
+        if salary is not None:
+            filter_query &= Q(job_salary_range__gte=salary)
+
+        queryset = self.queryset.filter(filter_query)
+
+        return queryset
+
+
+class PostAJobView(GenericAPIView):
+    serializer_class = JobSerializer
+    queryset = (
+        PostAJob.objects.select_related('job_category', 'job_type', 'created_by')
+        .prefetch_related('job_skills', 'job_location', 'job_level')
+        .all()
+    )
+
+    def get(self, request, *args, **kwargs):
+        # Get the model instance
+        instance = self.get_object()
+
+        # Instantiate the serializer
+        serializer = JobDetailSerializer(instance)
+
+        # Return the serialized data
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        # Instantiate the serializer
+        serializer = self.get_serializer(data=request.data)
+
+        # Perform validation and respond with error messages if failed
+        serializer.is_valid(raise_exception=True)
+
+        # Create a new instance
+        instance = serializer.save()
+
+        # Return serializer
+        return_serializer = JobDetailSerializer(instance)
+
+        # Return the serialized data
+        return Response(return_serializer.data, status=status.HTTP_201_CREATED)
+
+    def patch(self, request, *args, **kwargs):
+        # Get the model instance
+        instance = self.get_object()
+
+        # Instantiate the serializer and pass the `partial` arg to it
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+
+        # Perform validation and respond with error messages if failed
+        serializer.is_valid(raise_exception=True)
+
+        # Update the instance
+        instance = serializer.save()
+
+        # Return serializer
+        return_serializer = JobDetailSerializer(instance)
+
+        # Return the serialized data
+        return Response(return_serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        # Get the model instance
+        instance = self.get_object()
+
+        # Simply delete - no need to instantiate the serializer
+        instance.delete()
+
+        # Return an empty response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)

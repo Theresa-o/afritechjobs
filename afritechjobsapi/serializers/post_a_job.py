@@ -12,6 +12,7 @@ from afritechjobsapi.serializers.job_type import JobTypeSerializer, PostAJobType
 from afritechjobsapi.serializers.users import PostAJobUserSerializer, UserSerializer
 
 
+
 class JobDetailSerializer(serializers.ModelSerializer):
     job_category = CategorySerializer(read_only=True)
     job_skills = JobSkillsSerializer(many=True, read_only=True)

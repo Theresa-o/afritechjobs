@@ -39,9 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'afritechjobsapi',
-    'candidates',
-    'recruiters',
-    'admin'
 ]
 
 MIDDLEWARE = [

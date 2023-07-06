@@ -14,9 +14,6 @@ urlpatterns = [
     path("work-resources/<int:id>", views.work_resources_detail, name="work_resources_detail"),
     path("hiring-guide/", views.hiring_guide_list, name="hiring_guide_list"),
     path("hiring-guide/<int:id>", views.hiring_guide_detail, name="hiring_guide_detail"),
-    path("jobs/create", views.post_a_job, name="post_a_job"),
-    path("jobs/", views.view_jobs, name="view_jobs"),
-    path("jobs/<int:id>", views.view_jobs_detail, name="view_jobs_detail"),
     path("jobs/category", views.job_category, name="job_category"),
     path("jobs/category/<int:id>", views.job_category_detail, name="job_category_detail"),
     path("jobs/skills", views.job_skills, name="job_skills"),
@@ -25,6 +22,10 @@ urlpatterns = [
     path("jobs/locations/<int:id>", views.job_locations_detail, name="job_locations_detail"),
     path("jobs/type", views.job_type, name="job_type"),
     path("jobs/level", views.job_level, name="job_level"),
+
+    path("jobs/create", views.PostAJobListView.as_view(), name="post_a_job"),
+    # path("jobs/", views.view_jobs, name="view_jobs"),
+    # path("jobs/<int:id>", views.view_jobs_detail, name="view_jobs_detail"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
