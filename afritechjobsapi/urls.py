@@ -23,9 +23,22 @@ urlpatterns = [
     path("jobs/type", views.job_type, name="job_type"),
     path("jobs/level", views.job_level, name="job_level"),
 
-    path("jobs/create", views.PostAJobListView.as_view(), name="post_a_job"),
+    # path("jobs/create", views.PostAJobListView.as_view(), name="post_a_job"),
     # path("jobs/", views.view_jobs, name="view_jobs"),
     # path("jobs/<int:id>", views.view_jobs_detail, name="view_jobs_detail"),
+
+    # path('jobs/create', views.PostAJobView.as_view(), name='post_a_job'),
+    # path('jobs/', views.PostAJobListView.as_view(), name='jobs'),
+    # path('jobs/<int:pk>/', views.PostAJobDetailView.as_view(), name='post_a_job_single'),
+
+# ------------------------------my own-----------------------------------
+    # path('post-a-job/', views.PostAJobView.as_view(), name='post_a_job'),
+    # path('jobs/', views.PostAJobListView.as_view(), name='jobs'),
+    # path('post-a-job/<int:pk>/', views.PostAJobDetailView.as_view(), name='post_a_job_single'),
+
+    path('post-a-job/', views.PostAJobView.as_view(), name='post_a_job'),
+    path('jobs/', views.PostAJobListView.as_view(), name='jobs'),
+    path('post-a-job/<int:pk>/', views.PostAJobView.as_view(), name='post_a_job_single'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

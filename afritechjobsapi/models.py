@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+# from users.models import User
 # Create your models here.
 
 class Category(models.Model):
@@ -11,19 +11,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True)
-    is_email_confirmed = models.BooleanField(default=False)
+# class Profile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     bio = models.TextField(max_length=500, blank=True)
+#     is_email_confirmed = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"profile {self.user.username}"
+#     def __str__(self):
+#         return f"profile {self.user.username}"
 
-@receiver(post_save, sender=User)
-def update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    instance.profile.save()
+# @receiver(post_save, sender=User)
+# def update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Profile.objects.create(user=instance)
+#     instance.profile.save()
 
 class Blog(models.Model):
     def deleted_author_replacement_default():
@@ -35,7 +35,7 @@ class Blog(models.Model):
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -49,7 +49,7 @@ class Event(models.Model):
         return (1)
     
     event_name = models.CharField(max_length=200)
-    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     event_details = models.TextField()
     # banner_image = models.ImageField(upload_to="event")
     event_host = models.CharField(max_length=200)
@@ -71,7 +71,7 @@ class WorkResources(models.Model):
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -90,7 +90,7 @@ class HiringGuide(models.Model):
     content = models.TextField()
     category = models.ManyToManyField(Category, null=True, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(Profile, on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -180,13 +180,13 @@ class PostAJob(models.Model):
     job_application_link = models.URLField(max_length=200)
     company_name = models.CharField(max_length=200)
     company_hq = models.CharField(max_length=200)
-    company_logo = models.ImageField()
+    # company_logo = models.ImageField()
     companys_website = models.URLField(max_length=200)
     company_contact_email = models.EmailField(max_length=200, null=True, blank=True)
     company_description = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return self.job_title

@@ -1,9 +1,9 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Profile, Blog, Event, WorkResources, Category, PostAJob, JobLevel, JobLocations, JobSkills, JobType
+from .models import Blog, Event, WorkResources, Category, PostAJob, JobLevel, JobLocations, JobSkills, JobType
 
-admin.site.register(Profile)
+# admin.site.register(Profile)
 admin.site.register(Blog)
 admin.site.register(Event)
 admin.site.register(WorkResources)
