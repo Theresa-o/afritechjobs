@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import uuid
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your models here.
 
@@ -31,10 +32,17 @@ class User(AbstractUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.role = self.base_role
-            return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
         
     def __str__(self):
         return self.email
+    
+    def tokens(self):
+        refresh_token = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh_token),
+            'access': str(refresh_token.access_token)
+        }
         
 #this recruitermanager helps filter for only recruiters by tapping into .recruiter i.e Recruiter.recruiter.all() - we can filter for just recruiters
         
