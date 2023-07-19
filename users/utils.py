@@ -8,3 +8,9 @@ class Util:
         email=EmailMessage(subject=data['email_subject'], body=data['email_body'], from_email='sampsontioluwanimi@gmail.com', to=[data['to_email']])
         email.send()
         
+
+class RecruiterUtil:
+    @staticmethod
+    def send_email(data):
+        email = EmailMessage(subject=data['email_subject'], body=data['email_body'], to=[data['to_email']])
+        email.send()
