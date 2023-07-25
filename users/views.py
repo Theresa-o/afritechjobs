@@ -12,9 +12,9 @@ from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from users.serializers import RegisterSerializer, RecruiterRegisterSerializer, CandidateRegisterSerializer, EmailVerificationSerializer, LoginSerializer, RequestPasswordResetEmailSerializer, SetNewPasswordSerializer, LogOutSerializer, PasswordTokenConfirmSerializer
+from users.serializers import RegisterSerializer, RecruiterRegisterSerializer, CandidateRegisterSerializer, EmailVerificationSerializer, LoginSerializer, RequestPasswordResetEmailSerializer, SetNewPasswordSerializer, LogOutSerializer, PasswordTokenConfirmSerializer, RecruiterEmailVerificationSerializer, RecruiterLoginSerializer, RecruiterRequestPasswordResetEmailSerializer, RecruiterPasswordTokenConfirmSerializer, RecruiterSetNewPasswordSerializer, RecruiterLogOutSerializer
 from users.utils import Util
-from users.models import User
+from users.models import User, Recruiter
 
 # password reset
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -28,8 +28,10 @@ from users.utils import Util, RecruiterUtil
 #TODO: Account gets created even if the persons has not verified yet, as soon as POST is created, it creates
 #TODO: Put the EMAIL_HOST_USER and password in an env file, not directly into settings
 #TODO: Older things like blogs, hiring guides not showing parameters for swagger
-#TODO: 
-# Create your views here.
+#TODO: Create a cron job that removes the blocklisted tokens for logout by calling flushexpiredtokens - check jwt doc and cryce video
+#TODO: the login details for admin user can be used on recruiter login and vice versa #make sure this does not work
+#TODO: Password used before can be reused immediately after for password reset, make sure that the user puts in a new password different from the previous one
+
 
 class RegisterView(GenericAPIView):
 
@@ -168,7 +170,7 @@ class RecruiterRegisterView(GenericAPIView):
         serializer.save()
         user_data = serializer.data
         # Get the email of the current user
-        user = User.objects.get(email = user_data['email'])
+        user = Recruiter.objects.get(email = user_data['email'])
         # Get access to create a token for the current user
         token = RefreshToken.for_user(user).access_token
         # using the imported modeule, we need to get the current site
@@ -184,11 +186,88 @@ class RecruiterRegisterView(GenericAPIView):
         return Response(data=user_data, status=status.HTTP_201_CREATED)
     
 class VerifyRecruiterEmail(GenericAPIView):
-    def get(self):
-        pass
+    serializer_class = RecruiterEmailVerificationSerializer
 
+    token_param_config = openapi.Parameter('token', in_=openapi.IN_QUERY, description='Description', type=openapi.TYPE_STRING)
+    @swagger_auto_schema(manual_parameters=[token_param_config])
+    def get(self, request):
+        token = request.GET.get('token')
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user=Recruiter.objects.get(id=payload['user_id'])
+            if not user.is_email_verified:
+                user.is_email_verified = True
+                user.save()
+            return Response('email: Email verified successfully', status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError as identifier:
+            return Response('error: Activation link expired', status=status.HTTP_400_BAD_REQUEST)
+        except jwt.exceptions.DecodeError as identifier:
+            return Response('error: Invalid token', status=status.HTTP_400_BAD_REQUEST)
+
+class RecruiterLoginAPIView(GenericAPIView):
+    serializer_class = RecruiterLoginSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)    
     
+class RecruiterRequestPasswordResetEmailView(GenericAPIView):
+    serializer_class = RecruiterRequestPasswordResetEmailSerializer
 
+    def post(self, request):
+        data = {'request': request, 'data': request.data}
+        serializer = self.serializer_class(data = data)
+        email = request.data['email']
+        if Recruiter.objects.filter(email = email).exists():
+            user = Recruiter.objects.get(email = email)
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)
+            current_site = get_current_site(request=request).domain
+            relative_link = reverse('users:password_reset', kwargs={'uidb64': uidb64, 'token': token})
+            absolute_url = 'http://'+current_site+relative_link
+            email_body= 'Hello, \n Please use the link below to reset your password \n'+ absolute_url
+            data={'email_body': email_body, 'email_subject': 'Reset your password', 'to_email': user.email}
+            RecruiterUtil.send_email(data)
+        return Response({'success': 'A link was sent to your email to reset your password'}, status=status.HTTP_200_OK)
+
+
+class RecruiterPasswordTokenConfirmView(GenericAPIView):
+    serializer_class = RecruiterPasswordTokenConfirmSerializer
+    # def get_serializer_class(self):
+    #     return None
+    
+    # @swagger_auto_schema(auto_schema=False)
+    def get(self, request, uidb64, token):
+        
+        try:
+            id = smart_str(urlsafe_base64_decode(uidb64))
+            user = Recruiter.objects.get(id=id)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'error': 'Token is not valid, please request a new one'})
+            return Response({'sucess': True, 'message': 'Credentials are valid', 'uidb64': uidb64, 'token': token}, status=status.HTTP_200_OK)
+
+        except DjangoUnicodeDecodeError as identifier:
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'error': 'Token is not valid, please request a new one'})
+
+class RecruiterSetNewPasswordView(GenericAPIView):
+    serializer_class = RecruiterSetNewPasswordSerializer
+
+    def patch(self, request):
+        serializer = self.serializer_class(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        return Response({'success': True, 'message': 'Password reset successfully'}, status=status.HTTP_200_OK)
+
+class RecruiterLogOutView(GenericAPIView):
+    serializer_class = RecruiterLogOutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 # -----------------------------------CANDIDATES--------------------
     
 class CandidateRegisterView(GenericAPIView):
@@ -205,5 +284,4 @@ class CandidateRegisterView(GenericAPIView):
 
         return Response(data=user_data, status=status.HTTP_201_CREATED)
     
-
 
