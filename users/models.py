@@ -12,6 +12,7 @@ class User(AbstractUser, PermissionsMixin):
         ADMIN = "ADMIN", 'Admin'
         RECRUITER = "RECRUITER", 'Recruiter'
         CANDIDATE = "CANDIDATE", 'Candidate'
+        RANDOM = "RANDOM", 'Random'
 
     #the default role is admin cause if a recruiter is to be signed up, there would be register page for that
     base_role = Role.ADMIN
@@ -124,6 +125,8 @@ class Candidate(User):
 
     class Meta:
         proxy = True
+
+
 
 class CandidateProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

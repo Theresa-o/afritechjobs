@@ -151,9 +151,17 @@ STATIC_URL = 'static/'
 
 # email verification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
+
+# USE FOR PRODUCTION
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+
+# DONT USE FOR PRODUCTION, THE OTHER ONE WAS WAISTING TIME AND NOT CREATING SO THIS SSL IS TEMPORARY
+EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_PORT = 465
+
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
