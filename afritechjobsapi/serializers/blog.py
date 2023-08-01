@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from afritechjobsapi.models import (Blog)
+from afritechjobsapi.models import Blog
 from afritechjobsapi.serializers.category import CategorySerializer
 
 class BlogSerializer(serializers.ModelSerializer):

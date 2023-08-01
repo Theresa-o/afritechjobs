@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import RegisterView, VerifyEmail, RecruiterRegisterView, CandidateRegisterView, LoginAPIView, LogOutView, PasswordTokenConfirmView, RequestPasswordResetEmailView, SetNewPasswordView, VerifyRecruiterEmail, RecruiterLoginAPIView, RecruiterRequestPasswordResetEmailView, RecruiterPasswordTokenConfirmView, RecruiterSetNewPasswordView, RecruiterLogOutView, VerifyCandidatesEmail, CandidatesLoginAPIView, CandidateRequestPasswordResetEmailView, CandidatePasswordTokenConfirmView, CandidateSetNewPasswordView, CandidateLogOutView
-
+from users.views.administrator import RegisterView, VerifyEmail, LoginAPIView, RequestPasswordResetEmailView, PasswordTokenConfirmView, SetNewPasswordView, LogOutView
+from users.views.recruiter import RecruiterRegisterView, VerifyRecruiterEmail, RecruiterLoginAPIView, RecruiterRequestPasswordResetEmailView, RecruiterPasswordTokenConfirmView, RecruiterSetNewPasswordView, RecruiterLogOutView
+from users.views.candidate import CandidateRegisterView, VerifyCandidatesEmail, CandidatesLoginAPIView, CandidateRequestPasswordResetEmailView, CandidatePasswordTokenConfirmView, CandidateSetNewPasswordView, CandidateLogOutView
 
 app_name = 'users'
 

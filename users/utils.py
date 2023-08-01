@@ -13,12 +13,3 @@ class Util:
             print("Email sending failed:", e)
         
 
-class RecruiterUtil:
-    @staticmethod
-    def send_email(data):
-        try:
-            email = EmailMessage(subject=data['email_subject'], body=data['email_body'], to=[data['to_email']])
-            email.send()
-        except SMTPException as e:
-            print("Email sending failed:", e)
-
