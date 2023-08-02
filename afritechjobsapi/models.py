@@ -191,6 +191,29 @@ class PostAJob(models.Model):
     def __str__(self):
         return self.job_title
 
+
+class ExternalJobListing(models.Model):
+    job_title = models.CharField(max_length=200)
+    job_category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    job_skills = models.ManyToManyField(JobSkills, null=True, blank=True)
+    job_salary_range = models.IntegerField(blank=True)
+    job_description = models.TextField()
+    job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
+    job_location = models.ManyToManyField(JobLocations)
+    job_level = models.ManyToManyField(JobLevel)
+    job_application_link = models.URLField(max_length=200)
+    company_name = models.CharField(max_length=200)
+    company_hq = models.CharField(max_length=200)
+    # company_logo = models.ImageField()
+    companys_website = models.URLField(max_length=200)
+    company_contact_email = models.EmailField(max_length=200, null=True, blank=True)
+    company_description = models.TextField()
+    date_posted = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.job_title
+
     
 
 

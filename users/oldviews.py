@@ -34,6 +34,10 @@
 # #TODO: the login details for admin user can be used on recruiter login and vice versa #make sure this does not work
 # #TODO: Password used before can be reused immediately after for password reset, make sure that the user puts in a new password different from the previous one
 # #TODO: Using John explanation on stackoverflow, add celery to email sending job - https://stackoverflow.com/questions/76772897/timeouterror-winerror-10060-a-connection-attempt-failed-because-the-connected#76773941 and https://stackoverflow.com/questions/64678689/i-am-sending-registration-activation-email-using-celery-in-django-but-celery-giv
+#TODO: Create tags to make search search easier and to be included in the job posting for easy scannability
+#TODO: Add test to the functions
+
+
 
 # class RegisterView(GenericAPIView):
 

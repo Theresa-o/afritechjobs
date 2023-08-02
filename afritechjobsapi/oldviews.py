@@ -28,22 +28,7 @@ from .models import (
     JobLevel,
 )
 
-# from afritechjobsapi.serializers import (
-#     # BlogSerializer,
-#     # EventSerializer,
-#     # WorkResourcesSerializer,
-#     # HiringGuideSerializer,
-#     # PostAJobSerializer,
-#     # JobSerializer,
-#     # CategorySerializer,
-#     # JobSkillsSerializer,
-#     # JobLocationsSerializer,
-#     # JobTypeSerializer,
-#     # JobLevelSerializer,
 
-#     # JobDetailSerializer, 
-#     # JobSerializer
-# )
 
 
 # @api_view(['GET', 'POST'])
