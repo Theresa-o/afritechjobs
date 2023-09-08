@@ -20,5 +20,20 @@ A job board for the African tech community
 - Implemented API endpoints for posting job categories, skills, locations, types, and levels.
 - Designed APIs for creating, updating, retrieving, and deleting job listings and related information.
 
+## Usage
+The African Tech Job Board is designed to be user-friendly and self-explanatory. Here are some basic usage guidelines:
+
+Job Seekers:
+
+- Create a user profile with your information and upload your resume.
+- Browse and search for job listings.
+- Apply to job listings by submitting your application through the platform.
+- Receive email notifications for new job listings that match your preferences.
+  
+Employers:
+
+- Create an employer profile to post job listings.
+- Manage job listings and applications from potential candidates.
+- Communicate with job seekers through the platform.
 
 
