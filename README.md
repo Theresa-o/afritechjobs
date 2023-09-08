@@ -1,7 +1,7 @@
 
 # AfriTechJobs
 
-A job board for the African tech community
+Welcome to the African Tech Job Board! This project is aimed at creating a centralized platform for job seekers and employers within the African tech industry. Whether you're looking for a job opportunity or looking to hire talented individuals, this job board is here to connect you with the vibrant tech talent across the African continent.
 
 
 
@@ -27,13 +27,11 @@ Job Seekers:
 
 - Create a user profile with your information and upload your resume.
 - Browse and search for job listings.
-- Apply to job listings by submitting your application through the platform.
-- Receive email notifications for new job listings that match your preferences.
+- Apply to job listings
   
 Employers:
 
 - Create an employer profile to post job listings.
 - Manage job listings and applications from potential candidates.
-- Communicate with job seekers through the platform.
 
 
