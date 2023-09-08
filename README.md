@@ -34,5 +34,6 @@ Employers:
 - Create an employer profile to post job listings.
 - Manage job listings and applications from potential candidates.
 
-
+## Frontend Github Repo
+https://github.com/Theresa-o/afritechjobsnextjs
 
