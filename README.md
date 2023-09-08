@@ -35,5 +35,5 @@ Employers:
 - Manage job listings and applications from potential candidates.
 
 ## Frontend Github Repo
-https://github.com/Theresa-o/afritechjobsnextjs
+https://github.com/Theresa-o/afritechjobsfrontend
 
