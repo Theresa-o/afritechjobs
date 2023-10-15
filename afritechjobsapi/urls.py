@@ -10,6 +10,8 @@ from afritechjobsapi.views.job_locations import job_locations, job_locations_det
 from afritechjobsapi.views.job_type import job_type
 from afritechjobsapi.views.job_level import job_level
 from afritechjobsapi.views.post_a_job import PostAJobListView, PostAJobView
+# -------------------external api url-------------------------------
+from afritechjobsapi.views.external_job_listings import ExternalJobListView, SecondExternalJobListView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
@@ -47,10 +49,15 @@ urlpatterns = [
     # path('post-a-job/', views.PostAJobView.as_view(), name='post_a_job'),
     # path('jobs/', views.PostAJobListView.as_view(), name='jobs'),
     # path('post-a-job/<int:pk>/', views.PostAJobDetailView.as_view(), name='post_a_job_single'),
+    # path('post-a-job/', PostAJobView.as_view(), name='post_a_job'),
 
-    path('post-a-job/', PostAJobView.as_view(), name='post_a_job'),
+    
     path('jobs/', PostAJobListView.as_view(), name='jobs'),
     path('post-a-job/<int:pk>/', PostAJobView.as_view(), name='post_a_job_single'),
+
+# ----------------------------external job api-------------------------------
+    path('external-job-listing/', ExternalJobListView.as_view(), name='get_a_job_external'),
+    path('external-job-listing_other/', SecondExternalJobListView.as_view(), name='a_job_external'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
