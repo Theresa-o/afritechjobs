@@ -13,5 +13,5 @@ class PostAJobCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = [
-            'id',
+            'id', 
         ]

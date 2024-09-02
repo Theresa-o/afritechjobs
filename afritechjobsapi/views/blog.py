@@ -39,3 +39,5 @@ def blog_detail(request, id, format=None):
     elif request.method == 'DELETE':
         blog.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+

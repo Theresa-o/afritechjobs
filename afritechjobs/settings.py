@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+        'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,9 +47,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'afritechjobsapi',
     'users',
+    'django_filters',
+
 ]
 
 MIDDLEWARE = [
+        'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,7 +60,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
+
+
+# Allow all origins (use specific origins in production)
+CORS_ALLOW_ALL_ORIGINS = True
+# OR, for more security in production:
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # Your Next.js app during development
+#     # "https://your-production-site.com",  # Your Next.js app in production
+# ]
 
 ROOT_URLCONF = 'afritechjobs.urls'
 

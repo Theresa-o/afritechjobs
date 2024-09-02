@@ -5,6 +5,8 @@ from django.dispatch import receiver
 # from users.models import User
 # Create your models here.
 
+# User = get_user_model()
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, null=True, blank=True)
 
@@ -33,7 +35,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=255, unique=True)
     # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
-    category = models.ManyToManyField(Category, null=True, blank=True)
+    category = models.ManyToManyField(Category, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
@@ -69,7 +71,7 @@ class WorkResources(models.Model):
     title = models.CharField(max_length=255, unique=True)
     # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
-    category = models.ManyToManyField(Category, null=True, blank=True)
+    category = models.ManyToManyField(Category, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
@@ -88,7 +90,7 @@ class HiringGuide(models.Model):
     title = models.CharField(max_length=255, unique=True)
     # image = models.ImageField(upload_to="blog/%Y/%m/%d")
     content = models.TextField()
-    category = models.ManyToManyField(Category, null=True, blank=True)
+    category = models.ManyToManyField(Category, blank=True)
     # slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, default=deleted_author_replacement_default, null=True)
     meta_description = models.CharField(max_length=150, blank=True, null=True)
@@ -115,11 +117,11 @@ class JobLocations(models.Model):
         return self.name
     
 class JobType(models.Model):
-    CONTRACT = 'CT'
-    FULLTIME = 'FT'
-    FREELANCE = 'FL'
-    INTERNSHIP = 'IP'
-    PARTTIME = 'PT'
+    CONTRACT = 'Contract'
+    FULLTIME = 'FullTime'
+    FREELANCE = 'Freelance'
+    INTERNSHIP = 'Internship'
+    PARTTIME = 'Parttime'
 
     JOB_TYPE_CHOICES = [
         (CONTRACT, "Contract"),
@@ -129,24 +131,27 @@ class JobType(models.Model):
         (PARTTIME, "Parttime"),
     ]
 
-    job_type_choices = models.CharField(max_length=2, choices=JOB_TYPE_CHOICES, default=FULLTIME,)
+    job_type_choices = models.CharField(max_length=15, choices=JOB_TYPE_CHOICES, default=FULLTIME,)
 
+    def __str__(self):
+        return self.job_type_choices
 
 class JobLevel(models.Model):
 
-    STUDENT = 'ST'
-    INTERN = 'IN'
-    ENTRYLEVEL = 'EL'
-    MIDLEVEL = 'ML'
-    SENIORLEVEL = 'SL'
-    COFOUNDER = 'CF'
-    DIRECTOR = 'DC'
-    MANAGER = 'MG'
-    CEO = 'CEO'
-    CTO = 'CTO'
-    CMO = 'CMO'
-    CFO = 'CFO'
-    COO = 'COO'
+    STUDENT = 'Student'
+    INTERN = 'Intern'
+    ENTRYLEVEL = 'Entrylevel'
+    MIDLEVEL = 'Midlevel'
+    SENIORLEVEL = 'Seniorlevel'
+    COFOUNDER = 'Cofounder'
+    DIRECTOR = 'Director'
+    MANAGER = 'Manager'
+    CEO = 'Chief Executive Officer'
+    CTO = 'Chief Technology Officer'
+    CMO = 'Chief Marketing Officer'
+    COFOUNDER = "Cofounder"
+    CFO = 'Chief Financial Officer'
+    COO = 'Chief Operating Officer'
 
     JOB_LEVEL_CHOICES = [
         (STUDENT, "Student"),
@@ -165,18 +170,21 @@ class JobLevel(models.Model):
         (COO, "Chief Operating Officer"),
     ]
     
-    job_level_choices = models.CharField(max_length=3, choices=JOB_LEVEL_CHOICES, default=ENTRYLEVEL)
+    job_level_choices = models.CharField(max_length=30, choices=JOB_LEVEL_CHOICES, default=ENTRYLEVEL)
 
+    def __str__(self):
+        return self.job_level_choices
 
 class PostAJob(models.Model):
     job_title = models.CharField(max_length=200)
     job_category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    job_skills = models.ManyToManyField(JobSkills, null=True, blank=True)
+    job_skills = models.ManyToManyField(JobSkills, blank=True)
     job_salary_range = models.IntegerField(blank=True)
     job_description = models.TextField()
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     job_location = models.ManyToManyField(JobLocations)
-    job_level = models.ManyToManyField(JobLevel)
+    # job_level = models.ManyToManyField(JobLevel)
+    job_level = models.ForeignKey(JobLevel, on_delete=models.CASCADE)
     job_application_link = models.URLField(max_length=200)
     company_name = models.CharField(max_length=200)
     company_hq = models.CharField(max_length=200)
@@ -186,7 +194,7 @@ class PostAJob(models.Model):
     company_description = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    # created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return self.job_title
@@ -195,7 +203,7 @@ class PostAJob(models.Model):
 class ExternalJobListing(models.Model):
     job_title = models.CharField(max_length=200)
     job_category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    job_skills = models.ManyToManyField(JobSkills, null=True, blank=True)
+    job_skills = models.ManyToManyField(JobSkills, blank=True)
     job_salary_range = models.IntegerField(blank=True)
     job_description = models.TextField()
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)

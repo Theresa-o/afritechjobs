@@ -1,15 +1,20 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from afritechjobsapi.filters.filters import CategoryFilter
 from afritechjobsapi.serializers.category import CategorySerializer
 from rest_framework import status
 from rest_framework.response import Response
 from afritechjobsapi.models import Category
+from django_filters import rest_framework as filters
 
 
 @api_view(['GET', 'POST'])
 def job_category(request):
     if request.method == 'GET':
         category = Category.objects.all()
+        filterset = CategoryFilter(request.GET, queryset=category)
+        if filterset.is_valid():
+            category = filterset.qs
         category_list_serializer = CategorySerializer(category, many=True)
         return Response(category_list_serializer.data)
     elif request.method == 'POST':

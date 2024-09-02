@@ -18,8 +18,8 @@ class JobDetailSerializer(serializers.ModelSerializer):
     job_skills = JobSkillsSerializer(many=True, read_only=True)
     job_type = JobTypeSerializer(read_only=True)
     job_location = JobLocationsSerializer(many=True, read_only=True)
-    job_level = JobLevelSerializer(many=True, read_only=True)
-    created_by = UserSerializer(read_only=True)
+    job_level = JobLevelSerializer(read_only=True)
+    # created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = PostAJob
@@ -27,12 +27,19 @@ class JobDetailSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    job_category = PostAJobCategorySerializer(read_only=True)
-    job_skills = PostAJobSkillsSerializer(many=True, read_only=True)
-    job_type = PostAJobTypeSerializer(read_only=True)
-    job_location = PostAJobLocationsSerializer(many=True, read_only=True)
-    job_level = PostAJobLevelSerializer(many=True, read_only=True)
-    created_by = PostAJobUserSerializer(read_only=True)
+    # job_category = PostAJobCategorySerializer(read_only=True)
+    # job_skills = PostAJobSkillsSerializer(many=True, read_only=True)
+    # job_type = PostAJobTypeSerializer(read_only=True)
+    # job_location = PostAJobLocationsSerializer(many=True, read_only=True)
+    # job_level = PostAJobLevelSerializer(read_only=True)
+# remain comment
+    # created_by = PostAJobUserSerializer(read_only=True)
+
+    job_category = CategorySerializer(read_only=True)
+    job_skills = JobSkillsSerializer(many=True, read_only=True)
+    job_type = JobTypeSerializer(read_only=True)
+    job_location = JobLocationsSerializer(many=True, read_only=True)
+    job_level = JobLevelSerializer(read_only=True)
 
     class Meta:
         model = PostAJob
@@ -52,7 +59,8 @@ class JobSerializer(serializers.ModelSerializer):
             'companys_website',
             'company_contact_email',
             'company_description',
-            'created_by',
+            'date_created'
+            # 'created_by',
         )
 
     def create(self, validated_data):
@@ -64,8 +72,8 @@ class JobSerializer(serializers.ModelSerializer):
         job_type_pk = request.data.get('job_type')
         validated_data['job_type_id'] = job_type_pk
 
-        created_by_pk = request.data.get('created_by')
-        validated_data['created_by_id'] = created_by_pk
+        # created_by_pk = request.data.get('created_by')
+        # validated_data['created_by_id'] = created_by_pk
 
         job_skills_data = request.data.get('job_skills')
         validated_data['job_skills'] = job_skills_data
@@ -74,7 +82,7 @@ class JobSerializer(serializers.ModelSerializer):
         validated_data['job_location'] = job_location_data
 
         job_level_data = request.data.get('job_level')
-        validated_data['job_level'] = job_level_data
+        validated_data['job_level_id'] = job_level_data
 
         instance = super().create(validated_data)
 
@@ -91,9 +99,9 @@ class JobSerializer(serializers.ModelSerializer):
             job_type_pk = request.data['job_type']
             validated_data['job_type_id'] = job_type_pk
 
-        if request.data.get('created_by'):
-            created_by_pk = request.data['created_by']
-            validated_data['created_by_id'] = created_by_pk
+        # if request.data.get('created_by'):
+        #     created_by_pk = request.data['created_by']
+        #     validated_data['created_by_id'] = created_by_pk
 
         if request.data.get('job_skills'):
             job_skills_data = request.data['job_skills']

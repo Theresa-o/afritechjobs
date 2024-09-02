@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from afritechjobsapi.filters.filters import JobLocationsFilter
 from afritechjobsapi.serializers.job_location import JobLocationsSerializer
 from rest_framework import status
 from rest_framework.response import Response
@@ -9,6 +10,9 @@ from afritechjobsapi.models import JobLocations
 def job_locations(request):
     if request.method == 'GET':
         locations = JobLocations.objects.all()
+        filterset = JobLocationsFilter(request.GET, queryset=locations)
+        if filterset.is_valid():
+            locations = filterset.qs
         locations_list_serializer = JobLocationsSerializer(locations, many=True)
         return Response(locations_list_serializer.data)
     elif request.method == 'POST':

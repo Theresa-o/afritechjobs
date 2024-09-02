@@ -34,7 +34,7 @@ urlpatterns = [
     path("jobs/skills/<int:id>/", job_skills_detail, name="job_skills_detail"),
     path("jobs/locations/", job_locations, name="job_locations"),
     path("jobs/locations/<int:id>/", job_locations_detail, name="job_locations_detail"),
-    path("jobs/type", job_type, name="job_type"),
+    path("jobs/type/", job_type, name="job_type"),
     path("jobs/level", job_level, name="job_level"),
 
     # path("jobs/create", views.PostAJobListView.as_view(), name="post_a_job"),
@@ -53,6 +53,9 @@ urlpatterns = [
 
     
     path('jobs/', PostAJobListView.as_view(), name='jobs'),
+        # path('jobs/', PostAJobListView.as_view(), name='jobs-list'),
+    path('jobs/<int:pk>/', PostAJobView.as_view(), name='job-detail'),
+    path('post-a-job/', PostAJobListView.as_view(), name='post_a_job_list'),
     path('post-a-job/<int:pk>/', PostAJobView.as_view(), name='post_a_job_single'),
 
 # ----------------------------external job api-------------------------------
