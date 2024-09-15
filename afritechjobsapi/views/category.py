@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from afritechjobsapi.models import Category
 from django_filters import rest_framework as filters
+from rest_framework.pagination import PageNumberPagination
+
 
 
 @api_view(['GET', 'POST'])
@@ -15,8 +17,18 @@ def job_category(request):
         filterset = CategoryFilter(request.GET, queryset=category)
         if filterset.is_valid():
             category = filterset.qs
-        category_list_serializer = CategorySerializer(category, many=True)
-        return Response(category_list_serializer.data)
+
+        # Set up pagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 10 
+        paginator.page_size_query_param = 'page_size' 
+        paginator.max_page_size = 100
+        paginated_categories = paginator.paginate_queryset(category, request)
+
+        category_list_serializer = CategorySerializer(paginated_categories, many=True)
+        
+        # Return paginated response
+        return paginator.get_paginated_response(category_list_serializer.data)
     elif request.method == 'POST':
         category_serializer = CategorySerializer(data=request.data)
         if category_serializer.is_valid():

@@ -5,6 +5,8 @@ from afritechjobsapi.serializers.job_location import JobLocationsSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from afritechjobsapi.models import JobLocations
+from rest_framework.pagination import PageNumberPagination
+
 
 @api_view(['GET', 'POST'])
 def job_locations(request):
@@ -13,8 +15,18 @@ def job_locations(request):
         filterset = JobLocationsFilter(request.GET, queryset=locations)
         if filterset.is_valid():
             locations = filterset.qs
-        locations_list_serializer = JobLocationsSerializer(locations, many=True)
-        return Response(locations_list_serializer.data)
+
+        # Set up pagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 10 
+        paginator.page_size_query_param = 'page_size' 
+        paginator.max_page_size = 100
+        paginated_locations= paginator.paginate_queryset(locations, request)
+
+        locations_list_serializer = JobLocationsSerializer(paginated_locations, many=True)
+
+        # Return paginated response
+        return paginator.get_paginated_response(locations_list_serializer.data)
     elif request.method == 'POST':
         locations_serializer = JobLocationsSerializer(data=request.data)
         if locations_serializer.is_valid():

@@ -1,17 +1,32 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from afritechjobsapi.filters.filters import JobSkillsFilter
 from afritechjobsapi.serializers.job_skills import JobSkillsSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from afritechjobsapi.models import JobSkills
+from rest_framework.pagination import PageNumberPagination
+
 
 
 @api_view(['GET', 'POST'])
 def job_skills(request):
     if request.method == 'GET':
         skills = JobSkills.objects.all()
-        skills_list_serializer = JobSkillsSerializer(skills, many=True)
-        return Response(skills_list_serializer.data)
+        filterset = JobSkillsFilter(request.GET, queryset=skills)
+        if filterset.is_valid():
+            skills = filterset.qs
+
+        # Set up pagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 10 
+        paginator.page_size_query_param = 'page_size' 
+        paginator.max_page_size = 100
+        paginated_skills= paginator.paginate_queryset(skills, request)
+
+        skills_list_serializer = JobSkillsSerializer(paginated_skills, many=True)
+        # Return paginated response
+        return paginator.get_paginated_response(skills_list_serializer.data)
     elif request.method == 'POST':
         skills_serializer = JobSkillsSerializer(data=request.data)
         if skills_serializer.is_valid():

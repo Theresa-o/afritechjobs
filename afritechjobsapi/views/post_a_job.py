@@ -7,6 +7,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from afritechjobsapi.models import PostAJob
 from rest_framework import filters
+from rest_framework.pagination import PageNumberPagination
+
 
 
 import logging
@@ -17,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class PostAJobListView(GenericAPIView):
+    # http://127.0.0.1:8000/post-a-job/?search=Machine
     serializer_class = JobSerializer
     queryset = (
         # PostAJob.objects.select_related('job_category', 'job_type', 'created_by')
@@ -34,16 +37,35 @@ class PostAJobListView(GenericAPIView):
         'job_location__name',
         'job_level__job_level_choices'
     ]
-
+    
     def get(self, request, *args, **kwargs):
-        # Get the queryset
-        queryset = self.get_queryset()
+        # Get the filtered queryset
+        queryset = self.filter_queryset(self.get_queryset())
 
-        # Instantiate the serializer
+        # Paginate the queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            # If pagination is applied, get the paginated response
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # If no pagination, return the full response
         serializer = self.get_serializer(queryset, many=True)
-
-        # Return the serialized data
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    # def get_queryset(self):
+    #     queryset = PostAJob.objects.all()
+    #     search_term = self.request.query_params.get('search', None)
+    #     if search_term:
+    #         queryset = queryset.filter(
+    #             Q(job_title__icontains=search_term) |
+    #             Q(job_category__name__icontains=search_term) |
+    #             Q(job_skills__title__icontains=search_term) |
+    #             Q(job_type__job_type_choices__icontains=search_term) |
+    #             Q(job_location__name__icontains=search_term) |
+    #             Q(job_level__job_level_choices__icontains=search_term)
+    #         ).distinct()
+    #     return queryset
 
     # def get_queryset(self):
     #     """

@@ -5,6 +5,8 @@ from afritechjobsapi.serializers.job_type import JobTypeSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from afritechjobsapi.models import JobType
+from rest_framework.pagination import PageNumberPagination
+
 
 
 
@@ -15,5 +17,14 @@ def job_type(request):
         filterset = JobTypeFilter(request.GET, queryset=type)
         if filterset.is_valid():
             type = filterset.qs
-        type_list_serializer = JobTypeSerializer(type, many=True)
-        return Response(type_list_serializer.data)
+
+        # Set up pagination
+        paginator = PageNumberPagination()
+        paginator.page_size = 10 
+        paginator.page_size_query_param = 'page_size' 
+        paginator.max_page_size = 100
+        paginated_type= paginator.paginate_queryset(type, request)
+
+        type_list_serializer = JobTypeSerializer(paginated_type, many=True)
+        # Return paginated response
+        return paginator.get_paginated_response(type_list_serializer.data)
