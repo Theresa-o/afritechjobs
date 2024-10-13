@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from afritechjobsapi.filters.filters import PostAJobFilter
 from afritechjobsapi.serializers.post_a_job import JobDetailSerializer, JobSerializer
 from django.db.models import Q
 from rest_framework import status
@@ -7,6 +8,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from afritechjobsapi.models import PostAJob
 from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -15,7 +17,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
+class CustomPagination(PageNumberPagination):
+    page_size = 7
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class PostAJobListView(GenericAPIView):
@@ -27,7 +32,7 @@ class PostAJobListView(GenericAPIView):
         .prefetch_related('job_skills', 'job_location', 'job_level')
         .all()
     )
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     # search_fields = ["job_title", "job_category", "job_skills", "job_type", "job_location", "job_level",]
     search_fields = [
         'job_title',
@@ -37,6 +42,10 @@ class PostAJobListView(GenericAPIView):
         'job_location__name',
         'job_level__job_level_choices'
     ]
+    filterset_class = PostAJobFilter
+    pagination_class = CustomPagination
+
+
     
     def get(self, request, *args, **kwargs):
         # Get the filtered queryset

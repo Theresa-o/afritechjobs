@@ -34,7 +34,7 @@ class JobTypeFilter(django_filters.FilterSet):
         fields = ['job_type_choices']
 
 class JobSkillsFilter(django_filters.FilterSet):
-    # http://127.0.0.1:8000/jobs/type/?job_type=FULLTIME
+    # http://127.0.0.1:8000/jobs/type/?title=remote
     title = django_filters.CharFilter(field_name='title', lookup_expr='iexact')
 
     class Meta:
@@ -42,6 +42,11 @@ class JobSkillsFilter(django_filters.FilterSet):
         fields = ['title']
 
 class PostAJobFilter(django_filters.FilterSet):
+    job_category = django_filters.CharFilter(field_name="job_category__name", lookup_expr="iexact")
+    job_type = django_filters.CharFilter(field_name="job_type__job_type_choices", lookup_expr="iexact")
+    job_level = django_filters.CharFilter(field_name="job_level__job_level_choices", lookup_expr="iexact")
+    job_location = django_filters.CharFilter(field_name="job_location__name", lookup_expr="iexact")
+    job_skills = django_filters.CharFilter(field_name="job_skills__title", lookup_expr="iexact")
     class Meta:
         model = PostAJob
-        fields = ["job_title", "job_category", "job_skills", "job_type", "job_location", "job_level",]
+        fields = ['job_category', 'job_type', 'job_level', 'job_location', 'job_skills']

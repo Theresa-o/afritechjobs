@@ -4,7 +4,7 @@ from afritechjobsapi.views.blog import blog_list, blog_detail
 from afritechjobsapi.views.event import event_list, event_detail
 from afritechjobsapi.views.work_resources import work_resources_list, work_resources_detail
 from afritechjobsapi.views.hiring_guide import hiring_guide_list, hiring_guide_detail
-from afritechjobsapi.views.category import job_category, job_category_detail
+from afritechjobsapi.views.category import job_category, job_category_detail, job_list_by_category
 from afritechjobsapi.views.job_skills import job_skills, job_skills_detail
 from afritechjobsapi.views.job_locations import job_locations, job_locations_detail
 from afritechjobsapi.views.job_type import job_type
@@ -30,6 +30,7 @@ urlpatterns = [
 
     path("jobs/category/", job_category, name="job_category"),
     path("jobs/category/<int:id>/", job_category_detail, name="job_category_detail"),
+    path('jobs/jobs_by_category/', job_list_by_category, name='job-list-by-category'),
     path("jobs/skills/", job_skills, name="job_skills"),
     path("jobs/skills/<int:id>/", job_skills_detail, name="job_skills_detail"),
     path("jobs/locations/", job_locations, name="job_locations"),
